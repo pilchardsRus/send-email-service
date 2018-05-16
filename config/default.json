@@ -1,0 +1,29 @@
+{
+  "api": {
+    "port": 8080
+  },
+
+  "outbound": {
+    "sendgrid": {
+      //apikey
+      //endpoint
+      //domain
+    },
+    "mailgun": {
+
+      //apiKey
+      //domain
+      "endpoint": "/v3",
+      "host":  "api.mailgun.com",
+      "protocol": "https",
+      "port": "443",
+
+      "mute": false,
+      //"proxy": null
+      "timeout": 20000
+      //"retry": 1,
+
+
+    }
+  }
+}
