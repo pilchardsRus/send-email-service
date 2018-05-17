@@ -1,41 +1,52 @@
 import jsc from "jsverify";
 import * as arbMessage from "./arbitraries/message";
 import * as api from "../lib/api";
+import * as assert from "assert";
 
-describe('Messages', () => {
-    jsc.property("Validation of happy message",
+
+function checkArray(value) {
+    return Array.isArray(value) ? true : value;
+}
+
+const passThroughFailure = JSON.stringify;
+
+describe('Message Validation', () => {
+
+    jsc.property("happy messages validate",
         arbMessage.message,
-        msg => api.validateMessage(msg).matchWith({
-            Success: () => true,
-            Failure: f => f
-        }));
-    describe('to, cc, bcc transformation', () => {
+        msg => api.validateMessage(msg).fold(passThroughFailure, ()=> true));
+
+    describe('to, cc, bcc transformation2', () => {
         jsc.property("Valid messages have to: array of addresses",
             arbMessage.message,
-            msg => api.validateMessage(msg).matchWith({
-                Success: ({value}) => Array.isArray(value.to) ? true : value.to,
-                Failure: f => f
-            }));
+            msg => api.validateMessage(msg).fold(
+                passThroughFailure,
+                ({to:value}) => checkArray(value)
+                ));
+
         jsc.property("Valid messages have cc: array of addresses",
             arbMessage.message,
-            msg => api.validateMessage(msg).matchWith({
-                Success: ({value}) => Array.isArray(value.bcc) ? true : value.to,
-                Failure: f => f
-            }));
+            msg => api.validateMessage(msg).fold(
+                passThroughFailure,
+                ({cc:value}) => checkArray(value)
+            ));
         jsc.property("Valid messages have bcc: array of addresses",
             arbMessage.message,
-            msg => api.validateMessage(msg).matchWith({
-                Success: ({value}) => Array.isArray(value.cc) ? true : value.to,
-                Failure: f => f
-            }));
+            msg => api.validateMessage(msg).fold(
+                passThroughFailure,
+                ({bcc:value}) => checkArray(value)
+            ));
     });
 
-    jsc.property("Validation of invalid message",
+    it("should require 'to'/'subject/'body'", () =>
+        api.validateMessage({ to: null, bcc: ["nick@here.com"], body: null, subject: null}).fold(
+            f => assert.deepEqual(f, {to: 'required', body: 'required' ,subject: 'required'}),
+            s => assert.fail(`${s}, Should not have validated`)
+        )
+    );
+
+    jsc.property("invalid messages don't validate2",
         arbMessage.badMessageSpec,
-        (spec) =>
-            api.validateMessage(spec.badMsg).matchWith({
-                Success: s => s,
-                Failure: () => true,
-            }));
+        (spec) => api.validateMessage(spec.badMsg).fold(()=> true, passThroughFailure));
 
 });

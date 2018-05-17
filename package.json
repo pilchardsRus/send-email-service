@@ -9,17 +9,21 @@
   "author": "Nick Drew",
   "license": "ISC",
   "dependencies": {
-    "folktale": "^2.1.0",
-    "folktale-validations": "^2.12.0",
+    "funfix": "^7.0.1",
     "isemail": "3.1.2",
     "ono": "^4.0.5",
-    "restify": "^7.1.1"
+    "partial.lenses.validation": "^1.0.1",
+    "ramda": "^0.25.0",
+    "ramda-adjunct": "^2.8.0",
+    "restify": "^7.1.1",
+    "static-land": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-preset-es2015": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "jsverify": "latest",
-    "mocha": "latest"
+    "babel-preset-es2015": "^6.24.1",
+    "jsverify": "^0.8.3",
+    "mocha": "^5.1.1",
+    "partial.lenses": "^13.11.0"
   }
 }
