@@ -16,7 +16,7 @@ describe('Message Validation', () => {
         arbMessage.message,
         msg => api.validateMessage(msg).fold(passThroughFailure, ()=> true));
 
-    describe('to, cc, bcc transformation2', () => {
+    describe('to, cc, bcc transformation', () => {
         jsc.property("Valid messages have to: array of addresses",
             arbMessage.message,
             msg => api.validateMessage(msg).fold(
@@ -45,7 +45,7 @@ describe('Message Validation', () => {
         )
     );
 
-    jsc.property("invalid messages don't validate2",
+    jsc.property("invalid messages don't validate",
         arbMessage.badMessageSpec,
         (spec) => api.validateMessage(spec.badMsg).fold(()=> true, passThroughFailure));
 
